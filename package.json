@@ -1,0 +1,11 @@
+{
+	"name": "ape.workbench",
+	"description": "attrs plugin extentions - workbench",
+	"version": "0.1.0",	
+	"main": "activator.js",
+	"activator": "activator.js",
+	"imports": {
+		"ape.http": "*",
+		"ui.alien": "*"
+	}
+}
