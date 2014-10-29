@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = function(ctx) {	
-	var http = ctx.require('ape.http');
+	var http = ctx.require('plexi.http');
 	
 	var bucket = http.create(this);
 	bucket.mount('/workbench');
