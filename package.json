@@ -1,7 +1,7 @@
 {
 	"name": "plexi.workbench",
 	"description": "plexi plugin for ui workbench",
-	"version": "0.0.1",	
+	"version": "0.0.1a",	
 	"main": "activator.js",
 	"activator": "activator.js",
 	"imports": {
