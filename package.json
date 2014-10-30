@@ -6,6 +6,6 @@
 	"activator": "activator.js",
 	"imports": {
 		"plexi.http": "*",
-		"ui.alien": "*"
+		"ui-alien": "*"
 	}
 }
