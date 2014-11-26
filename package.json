@@ -1,11 +1,16 @@
 {
 	"name": "plexi.workbench",
 	"description": "plexi plugin for ui workbench",
-	"version": "0.0.1b",	
+	"version": "0.0.2",
 	"main": "activator.js",
-	"activator": "activator.js",
-	"imports": {
-		"plexi.http": "*",
-		"ui-alien": "*"
+	"devDependencies": {
+		"express": "^4.10.2"
+	},
+	"plexi": {
+		"activator": "activator.js",
+		"dependencies": {
+			"plexi.http": "*",
+			"ui-alien": "*"
+		}
 	}
 }
