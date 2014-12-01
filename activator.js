@@ -21,4 +21,13 @@ module.exports = function(ctx) {
 			console.log(uri + ' from ' + name);
 		}
 	}
+	
+	return {
+		create: function(id) {
+		},
+		get: function(id) {
+		},
+		all: function() {
+		}
+	}
 };
