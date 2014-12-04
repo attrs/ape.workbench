@@ -1,16 +1,18 @@
 {
 	"name": "plexi.workbench",
 	"description": "plexi plugin for ui workbench",
-	"version": "0.0.2",
+	"version": "0.1.0-alpha.1",
 	"main": "activator.js",
-	"devDependencies": {
-		"express": "^4.10.2"
-	},
 	"plexi": {
 		"activator": "activator.js",
 		"dependencies": {
 			"plexi.http": "*",
 			"ui-alien": "*"
 		}
-	}
+	},
+	
+	"author": "joje <joje.attrs@gmail.com>",
+	"homepage": "https://github.com/attrs/plexi.workbench",
+	"repository": "attrs/plexi.workbench",
+	"license": "MIT"
 }
