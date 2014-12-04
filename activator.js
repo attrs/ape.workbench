@@ -3,7 +3,7 @@ var path = require('path');
 module.exports = function(ctx) {
 	var http = ctx.require('plexi.http');
 	
-	var bucket = http.create(ctx);
+	var bucket = http.create();
 	bucket.mount('/workbench');
 	
 	bucket.static('/', path.join(__dirname, 'webapps'));
