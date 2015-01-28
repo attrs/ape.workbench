@@ -1,0 +1,52 @@
+{
+	"preferences": {
+		"plexi.http": {
+			"servers": {
+				"default": {
+					"docbase": "www",
+					"mapping": "*"
+				},
+				"admin": {
+					"host": ["admin.attrs.io", "system.attrs.io"],
+					"docbase": "www/admin",
+					"mapping": [
+						"ui-aliens*"
+					]
+				},
+				"attrs": {
+					"host": "*.attrs.io",
+					"docbase": "www/:1",
+					"favicon": "www/favicon.ico",
+					"compress": true,
+					"charset": "utf8",
+					"session": {
+						"type": "default",
+						"resave": true,
+						"saveUninitialized": true,
+						"secret": "tlzmflt"
+					},
+					"mount": {
+						"./bower_components": "/bower"
+					},
+					"statuspage": true,
+					"logging": {
+						"access": ":date - :method :status :url :remote-addr [:res[content-length] :referrer :user-agent :response-time ms]",
+						"error": ":date - :method :status :url :remote-addr [:res[content-length] :referrer :user-agent :response-time ms]",
+						"console": true,
+						"stack": true,
+						"web": true
+					},
+					"filters": {
+						"*.php": "php",
+						"*.jsp": "tomcat",
+						"*.do": "tomcat",
+						"*.jsx": "node-jsx",
+						"/servlets/*": "tomcat",
+						"/WEB-INF/*": false
+					},
+					"mapping": "*"
+				}
+			}
+		}
+	}
+}
