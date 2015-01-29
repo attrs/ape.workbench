@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="views.css" scoped>
+
+<script>
+	(function() {
+		var current = document.currentXImport;
+		var parameters = current ? current.parameters : {};
+		attrs.dom.anyway(function($) {
+			var page = parameters.page || {};
+			
+			$('#contents').html(page.title);
+		});
+	})();
+</script>
+
+<div flex flexbox>
+	<div id="top"></div>
+	<div flex flexbox="horizontal">
+		<div id="left">
+			<!-- side -->
+			<x-list id="snb" selectable arrow>
+				<div class="header">Getting Started</div>
+				<li href="#getstarted.index" class="row"><a>Concept</a></li>
+				<li href="#getstarted.wc" class="row"><a>WebComponents</a></li>
+				<li href="#getstarted.tag" class="row"><a>Handle As Tag</a></li>
+				<li href="#getstarted.element" class="row"><a>Handle As Element</a></li>
+				<li href="#getstarted.cmp" class="row"><a>Handle As Component</a></li>
+			</x-list>
+			<!-- //side -->
+		</div>
+		<div id="center" flex flexbox>
+			<div id="contents" flex flexbox align="center center">
+				Views
+			</div>
+		</div>
+		<div id="right">
+			<!-- side -->
+			<x-list id="snb" selectable arrow>
+				<div class="header">Getting Started</div>
+				<li href="#getstarted.index" class="row"><a>Concept</a></li>
+				<li href="#getstarted.wc" class="row"><a>WebComponents</a></li>
+				<li href="#getstarted.tag" class="row"><a>Handle As Tag</a></li>
+				<li href="#getstarted.element" class="row"><a>Handle As Element</a></li>
+				<li href="#getstarted.cmp" class="row"><a>Handle As Component</a></li>
+			</x-list>
+			<!-- //side -->
+		</div>
+	</div>
+	<div id="bottom"></div>
+</div>

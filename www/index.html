@@ -1,69 +1,121 @@
 <!DOCTYPE html>
 
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		
-		<!-- attrs.ui initial paramters -->
-		<meta name="attrs.ui.debug" content="false">
-		<meta name="attrs.ui.debug.loader" content="false">
-		<meta name="attrs.ui.debug.translation" content="false">
-		<meta name="attrs.ui.debug.component" content="false">
-		<meta name="attrs.ui.debug.hash" content="false">
-		
-		<title>Workbench</title>
-		
-		<script type="text/javascript" src="./ui-alien/ui-alien.js"></script>
-		<link rel="stylesheet" type="text/css" href="./ui-alien/ui-alien.css" />
-		
-		<script type="text/javascript">
-			(function() {
-				var IA = require('ia');
-				var Path = require('path');
-				var UI = require('ui.alien');
-				var $ = require('attrs.dom');
-		
-				UI(document).ready(function(app) {
-					console.log('Application Ready!', app);
-				});
-			})();
-		</script>
-	</head>
-	<body>
-		<flex class="full">
-			<tabs id="tabs" class="border top w100">
-				<tab><icon icon="clock"></icon> Tab1</tab>
-				<tab><icon icon="clock"></icon> Tab2</tab>
-				<tab><icon icon="clock"></icon> Tab3</tab>
-			</tabs>
-			<breadcrumb id="breadcrumb" class="w100 small bb">
-				<a href="#"><icon icon="home"></icon></a>
-			</breadcrumb>
-			<flex class="horizontal fit" id="workbench" data-decorators_="carousel">
-				<div id="side" style="width:250px;border-right: 1px solid #ddd;" class="scroll-y">
-					<snb id="snb" data-src="./contents/sitemap.json">
-					</snb>
-				</div>
-				<div id="contents" class="fit scroll-y pad">
-					<h2 id="contents-title" hidden></h2>
-			
-					<div id="contents-body">
-						<!-- body contents will be filled by programmatically -->
-					</div>
-				</div>
-			</flex>
-			<div id="footer">
-				<div class="inner">
-					<div class="status">
-						<icon class="icon-list-unordered"></icon>Done
-					</div>
-					<div class="copyright bold">
-						<a href="https://grifix.io" target="_blank">Grifix</a> © 2014
-					</div>
-				</div>
-			</div>
-		</flex>
-	</body>
-</html>
+<head>
+	<title>Workbench</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="ui-alien.debug" content="false">
 
+	<link rel="import" href="/ui-aliens/ui-aliens.html">
+	<link rel="import" href="/ui-aliens/extra/markdown/x-markdown.html">
+	<link rel="import" href="/ui-aliens/extra/ace-editor/x-ace-editor.html">
+	
+	<link rel="stylesheet" href="style.css">
+	
+	<script type="text/javascript" src="workbench/workbench.js"></script>
+	
+	<script>	
+		attrs.dom.anyway(function($) {
+			console.log('ready', attrs.util.elapsed() + ' ms');
+			
+			var tabs = $('#tabs', 0);
+			var include = $('#include', 0);
+			
+			Workbench.load(function(err, workbench) {
+				if( err ) return console.error('workbench error', err);
+				
+				var startup = function() {
+					var pages = workbench.pages;
+					var pagemap = {};			
+					pages.forEach(function(page) {
+						pagemap[page.id] = page;
+						
+						var tab = document.createElement('x-tab');
+						tab.setAttribute('href', '#' + page.id);
+						var html = '';
+						
+						if( page.icon ) html += '<x-icon style="font-size:1.2em;">' + page.icon + '</x-icon> ';
+						html += page.title || 'Untitled';
+						 
+						tab.innerHTML = html;
+						tabs.appendChild(tab);
+					});
+				
+					attrs.hash.routes({
+						'*': function(next) {
+							var name = this.name;
+							var path = this.path;
+							
+							var page = pagemap[name];
+							
+							if( this.initialcall && !page ) page = pages[0];
+							
+							if( page ) {
+								var type = page.type;
+								
+								if( type === 'html' ) {
+									include.load(page.src, function(err, result) {
+										if( err ) return console.error(err);
+			
+										var menu = $('[href="#' + path + '"]', 0);
+										if( menu ) menu.parentNode.select(menu);
+										next();
+									});
+								} else if( type === 'views' ) {
+									include.load('pages/views.html', {page:page}, function(err, result) {
+										if( err ) return console.error(err);
+			
+										var menu = $('[href="#' + path + '"]', 0);
+										if( menu ) menu.parentNode.select(menu);			
+										next();
+									});
+								}
+							}
+						}
+					}, false);					
+				};
+				
+				window.login = function() {
+					$('#login',0).close();
+					startup();
+					return false;
+				}
+				
+				//<x-tab closable>DataGrid</x-tab>				
+				if( !workbench.auth ) login();
+			});
+		});
+	</script>
+</head>
+<body>
+	<div id="rootpane" flexbox fit>
+		<x-close id="app-close"></x-close>
+		<div id="header">
+			<x-tabs id="tabs" chrome toolbar></x-tabs>
+		</div>
+		<x-import id="include" flex flexbox></x-import>
+		<div id="footer">
+		</div>
+	</div>
+	<x-dialog id="login" mask="-webkit-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), linear-gradient(to bottom, rgba(57,173,219,.25) 0%,rgba(42,60,87,.4) 100%), linear-gradient(135deg, #670d10 0%,#092756 100%)" draggable modal opened>
+		<x-panel fancy shadow="inner" style="color:white;">
+			<x-icon class="icon" circle style="background: #3c3650;">chrome</x-icon>
+			<h1 class="title">UI ALIENS</h1>
+
+			<form onsubmit="return login(this);">
+				<input is="x-input" type="email" name="email" placeholder="Email Address" required wide dark>
+				<input is="x-input" type="password" name="password" placeholder="Password" required wide dark>
+				
+				<x-cells oncellclick="console.log('cell click', event.detail.cell);">
+			        <div><label for="frequency"></label></div>
+					<div style="text-align:right;">
+				    	<x-select></x-select>
+					</div>
+				</x-cells>
+				<button is="x-btn" large blue chrome round wide>Sign In</button>
+		    </form>
+		</x-panel>
+	</x-dialog>
+</body>
+</html>

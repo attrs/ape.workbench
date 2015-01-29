@@ -1,0 +1,30 @@
+#side {
+	width: 250px;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	border-right: 1px solid rgba(127,127,127,0.15);
+}
+
+#contents {
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+#snb {
+	border-bottom: 1px solid rgba(127,127,127,0.15);
+}
+
+x-list {
+	font-weight: normal;
+}
+
+.content {
+	padding: 15px 20px;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+.paging {
+	text-align: center;
+	-margin: 15px 0;
+}
