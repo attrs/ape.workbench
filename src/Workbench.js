@@ -19,8 +19,13 @@ function Workbench(options) {
 }
 
 Workbench.prototype = {
+	path: function(uri) {
+		return path.resolve(this.docbase, uri);
+	},
 	createPage: function(config) {
-		var page = new Page(this, config);
+		var PageType = Page.getType(config.type);
+		if( !PageType ) return console.error('unknown page type', config.type);
+		var page = new PageType(this, config);
 		this.pages.push(page);
 		this.pagemap[page.id] = page;
 		return page;

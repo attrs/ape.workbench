@@ -2,7 +2,7 @@
 
 <html>
 <head>
-	<title>Workbench</title>
+	<title></title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="ui-alien.debug" content="false">
@@ -24,6 +24,9 @@
 			
 			Workbench.load(function(err, workbench) {
 				if( err ) return console.error('workbench error', err);
+				
+				document.title = workbench.title || 'Workbench';
+				console.log('workbench.title', workbench.title);
 				
 				var startup = function() {
 					var pages = workbench.pages;
