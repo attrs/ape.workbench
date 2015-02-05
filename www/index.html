@@ -11,9 +11,8 @@
 	<link rel="import" href="/ui-aliens/extra/markdown/x-markdown.html">
 	<link rel="import" href="/ui-aliens/extra/ace-editor/x-ace-editor.html">
 	
-	<link rel="stylesheet" href="style.css">
-	
-	<script type="text/javascript" src="workbench/workbench.js"></script>
+	<link rel="stylesheet" href="workbench.css">
+	<script type="text/javascript" src="workbench.js"></script>
 	
 	<script>	
 		attrs.dom.anyway(function($) {
@@ -26,7 +25,6 @@
 				if( err ) return console.error('workbench error', err);
 				
 				document.title = workbench.title || 'Workbench';
-				console.log('workbench.title', workbench.title);
 				
 				var startup = function() {
 					var pages = workbench.pages;
@@ -66,7 +64,7 @@
 										next();
 									});
 								} else if( type === 'views' ) {
-									include.load('pages/views.html', {page:page}, function(err, result) {
+									include.load('types/views.html', {page:page}, function(err, result) {
 										if( err ) return console.error(err);
 			
 										var menu = $('[href="#' + path + '"]', 0);

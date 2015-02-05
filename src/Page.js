@@ -7,9 +7,8 @@ var HTMLPage = (function() {
 		this.options = options;
 		this.id = options.id || 'html-' + (seq++);
 		this.title = options.title || 'untitled';
-		this.icon = options.icon;
-		
-		this.src = options.src ? workbench.path(options.src) : null;	
+		this.icon = options.icon;		
+		this.src = options.src;
 	}
 	
 	HTMLPage.prototype = new Page();

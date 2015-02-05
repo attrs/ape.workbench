@@ -1,26 +1,43 @@
 var path = require('path');
+var fs = require('fs');
 var uuid = require('uuid');
 
 var Page = require('./Page.js');
 
 function Workbench(options) {
-	options = options || {};
-	
-	this.uuid = uuid.v4();
-	this.docbase = options.docbase || process.cwd;
-	this.title = options.title || 'Untitled';
-	this.pages = [];
-	this.pagemap = {};
-	
-	var self = this;
-	(options.pages || []).forEach(function(page) {
-		self.createPage(page);
-	});
+	this.reload(options);
 }
 
 Workbench.prototype = {
 	path: function(uri) {
-		return path.resolve(this.docbase, uri);
+		return this.docbase ? path.resolve(this.docbase, uri) : uri;
+	},
+	reload: function(options) {
+		options = options || {};
+		
+		var docbase = options.docbase;
+		if( docbase ) {
+			var file = path.resolve(docbase, 'workbench.json');
+			if( fs.existsSync(file) ) {
+				try {
+					eval('options = ' + fs.readFileSync(file));
+					options.docbase = docbase;
+				} catch(err) {
+					return console.error('[workbench] workbench.json load error', err.message);
+				}
+			}
+		}
+		
+		var self = this;
+		this.docbase = docbase;
+		this.pages = [];
+		this.pagemap = {};
+		this.title = options.title || 'Untitled';
+		(options.pages || []).forEach(function(page) {
+			self.createPage(page);
+		});
+		
+		return this;
 	},
 	createPage: function(config) {
 		var PageType = Page.getType(config.type);
@@ -78,12 +95,6 @@ Workbench.prototype = {
 			pages: this.pages
 		}
 	}
-};
-
-Workbench.router = function(workbench) {
-	return function(req, res, next) {
-		res.send(workbench);
-	};
 };
 
 module.exports = Workbench;
