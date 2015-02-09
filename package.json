@@ -6,8 +6,8 @@
   "plexi": {
     "activator": "src/activator.js",
     "dependencies": {
-      "ui-aliens": "0.x",
-      "plexi.http": "0.1.x"
+      "ui-aliens": "*",
+      "plexi.http": "*"
     }
   },
   "author": "joje <joje.attrs@gmail.com>",
