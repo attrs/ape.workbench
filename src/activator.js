@@ -1,66 +1,63 @@
 var path = require('path');
+var fs = require('fs');
+var wrench = require('wrench');
 var Workbench = require('./Workbench.js');
-
-var workbenches = {};
+var util = require('attrs.util');
+var pkg = require('../package.json');
 
 module.exports = {
 	start: function(ctx) {
-		var http = ctx.require('plexi.http');
+		var app = ctx.application;
+		var pref = ctx.preference;
 		
-		var create = function(id, options) {
-			if( !id || typeof id !== 'string' ) return console.error('workbench id must be a string', id);
-			if( workbenches[id] ) return console.error('already exists workbench id', id);
-			
-			if( typeof options === 'string' ) options = {docbase:options};
-		
-			var workbench = new Workbench(options);
-			var router = http.create(id).docbase(options.docbase);
-			
-			router.static('/', path.resolve(__dirname, '../www/'));
-			router.static('/index.html', path.resolve(__dirname, '../www/index.html'));
-			router.static('/workbench.html', path.resolve(__dirname, '../www/index.html'));
-			router.get('/workbench.json', function(req, res, next) {
-				res.send(workbench);
-			});
-			
-			workbench.router = router;
-			
-			var mount = options.mount;
-			if( mount && mount.path ) {
-				if( mount.all ) {
-					http.mountToAll(mount.path, router);
-				} else if( mount.server ) {
-					var server = http.server(mount.server);
-					if( server ) server.mount(mount.path, router);
-					else console.error('[workbench] not found server', mount.server);
-				} else {
-					http.mount(mount.path, router);
-				}
+		// describe to default pref to plexi.json
+		if( !pref ) {
+			var docbase = path.resolve(process.cwd(), 'www.admin');
+			if( !fs.existsSync(docbase) ) {
+				fs.mkdirSync(docbase);
+				wrench.copyDirSyncRecursive(path.resolve(__dirname, '../www.admin'), docbase, {
+					forceDelete: true,
+					preserveFiles: true
+				});
 			}
 			
-			return workbenches[id] = workbench;
-		};
+			pref = ctx.application.preferences.set('plexi.http', {
+				workbenches: {
+					admin: {
+						docbase: 'www.admin',
+						mount: {
+							path: '/admin'
+						}
+					}
+				}
+			});
+			ctx.application.preferences.save();
+		}
 		
-		var config = ctx.preference;
-		for(var k in config.workbenches) {
-			create(k, config.workbenches[k]);
+		
+		var http = ctx.require('plexi.http');
+		Workbench.httpService = http;
+				
+		for(var k in pref.workbenches) {
+			new Workbench(util.mix(pref.workbenches[k], {
+				id: k
+			}));
 		}
 		
 		return {
 			Workbench: Workbench,
-			create: create,
+			create: function(options) {
+				return new Workbench(options);
+			},
 			get: function(id) {
-				return workbenches[id];
+				return Workbench.get(id);
 			},
 			all: function() {
-				var arr = [];
-				for(var k in workbenches) {
-					arr.push(workbenches[k]);
-				}
-				return arr;
+				return Workbench.all();
 			}
 		}
 	},
 	stop: function(ctx) {
+		Workbench.clear();
 	}
 };
