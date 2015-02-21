@@ -21,7 +21,7 @@ module.exports = {
 				});
 			}
 			
-			pref = ctx.application.preferences.set('plexi.http', {
+			pref = ctx.application.preferences.set('plexi.workbench', {
 				workbenches: {
 					admin: {
 						docbase: 'www.admin',
